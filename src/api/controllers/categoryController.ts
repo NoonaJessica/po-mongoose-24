@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from 'express';
-import {Category} from '../../types/Gategory';
+import {Category} from '../../types/Category';
 import {MessageResponse} from '../../types/Messages';
 import CategoryModel from '../models/categoryModel';
 import CustomError from '../../classes/CustomError';
@@ -17,7 +17,7 @@ const postCategory = async (
     const newCategory = new CategoryModel(req.body);
     const savedCategory = await newCategory.save();
 
-    res.json({
+    res.status(201).json({
       message: 'Category created',
       data: savedCategory,
     });
@@ -28,16 +28,13 @@ const postCategory = async (
 
 const getCategories = async (
   req: Request,
-  res: Response<DBMessageResponse>,
+  res: Response<Category[]>,
   next: NextFunction,
 ) => {
   try {
     const categories = await CategoryModel.find();
 
-    res.json({
-      message: 'Categories retrieved',
-      data: categories,
-    });
+    res.json(categories);
   } catch (error) {
     next(new CustomError((error as Error).message, 500));
   }
@@ -45,7 +42,7 @@ const getCategories = async (
 
 const getCategory = async (
   req: Request<{id: string}>,
-  res: Response<DBMessageResponse>,
+  res: Response<Category>,
   next: NextFunction,
 ) => {
   try {
@@ -55,10 +52,7 @@ const getCategory = async (
       throw new CustomError('Category not found', 404);
     }
 
-    res.json({
-      message: 'Category retrieved',
-      data: category,
-    });
+    res.json(category);
   } catch (error) {
     next(new CustomError((error as Error).message, 500));
   }
@@ -113,4 +107,3 @@ const deleteCategory = async (
 };
 
 export {postCategory, getCategories, getCategory, putCategory, deleteCategory};
-

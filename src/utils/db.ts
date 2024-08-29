@@ -3,12 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const mongoConnect = async () => {
-  // Connect to MongoDB
   try {
-    if (!process.env.DATABASE_URL) {
-      throw new Error('Database URL is not found in .env file');
+    if (!process.env.DB_URL) {
+      throw new Error('Database url not found in .env file');
     }
-    const connection = await mongoose.connect(process.env.DATABASE_URL);
+    const connection = await mongoose.connect(process.env.DB_URL);
     console.log('DB connected successfully');
     return connection;
   } catch (error) {
