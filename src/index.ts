@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.log(`Listening: http://localhost:${port}`);
     });
-    } catch (error) {
-      console.error('Server failed to start: ', (error as Error).message);
-    }
+  } catch (error) {
+    console.error('Error starting server: ', (error as Error).message);
+  }
 })();

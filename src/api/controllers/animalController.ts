@@ -32,7 +32,16 @@ const getAnimal = async (
   next: NextFunction,
 ) => {
   try {
-    const species = await AnimalModel.find();
+    const species = await AnimalModel.find()
+      .select('-__v')
+      .populate({
+        path: 'species',
+        select: '-__v',
+        populate: {
+          path: 'category',
+          select: '-__v',
+        },
+      });
 
     res.json(species);
   } catch (error) {
@@ -46,7 +55,16 @@ const getSingleAnimal = async (
   next: NextFunction,
 ) => {
   try {
-    const species = await AnimalModel.findById(req.params.id);
+    const species = await AnimalModel.findById(req.params.id)
+      .select('-__v')
+      .populate({
+        path: 'species',
+        select: '-__v',
+        populate: {
+          path: 'category',
+          select: '-__v',
+        },
+      });
 
     if (!species) {
       throw new CustomError('Animal not found', 404);
@@ -118,7 +136,30 @@ const getAnimalsByBox = async (
           $box: [topRight.split(','), bottomLeft.split(',')],
         },
       },
-    });
+    })
+      .select('-__v')
+      .populate({
+        path: 'species',
+        select: '-__v',
+        populate: {
+          path: 'category',
+          select: '-__v',
+        },
+      });
+
+    res.json(animals);
+  } catch (error) {
+    next(new CustomError((error as Error).message, 500));
+  }
+};
+
+const getBySpecies = async (
+  req: Request<{species: string}>,
+  res: Response<Animal[]>,
+  next: NextFunction,
+) => {
+  try {
+    const animals = await AnimalModel.findBySpecies(req.params.species);
 
     res.json(animals);
   } catch (error) {
@@ -133,4 +174,5 @@ export {
   putAnimal,
   deleteAnimal,
   getAnimalsByBox,
+  getBySpecies,
 };
