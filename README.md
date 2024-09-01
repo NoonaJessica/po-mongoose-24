@@ -2,4 +2,4 @@
 
 ![Tehtävä: Ohjelmointi - Viikko 2 - Mongoose](/kuvat/testitulos1.png)
 
-# 12/17 läpi
+# 19/20 läpi
